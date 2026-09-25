@@ -10,6 +10,7 @@ export interface AlunoRow extends RowDataPacket {
   id: number;
   nome: string;
   curso: string;
+  email: string;
 }
 
 @Injectable()
@@ -25,7 +26,7 @@ export class AlunosRepository {
         AlunoRow[]
       >(
         `
-          SELECT id, nome, curso
+          SELECT id, nome, curso, email
           FROM alunos
           ORDER BY id
         `,
@@ -40,7 +41,7 @@ export class AlunosRepository {
       AlunoRow[]
     >(
       `
-        SELECT id, nome, curso
+        SELECT id, nome, curso, email
         FROM alunos
         WHERE id = ?
       `,
@@ -53,6 +54,7 @@ export class AlunosRepository {
 async create(
   nome: string,
   curso: string,
+  email: string
 ) {
   const [result] =
     await this.databaseService.execute<
@@ -61,17 +63,19 @@ async create(
       `
         INSERT INTO alunos (
           nome,
-          curso
+          curso,
+          email
         )
-        VALUES (?, ?)
+        VALUES (?, ?, ?)
       `,
-      [nome, curso],
+      [nome, curso, email],
     );
 
   return {
     id: result.insertId,
     nome,
     curso,
+    email,
   };
 }
 
@@ -79,6 +83,7 @@ async update(
   id: number,
   nome: string,
   curso: string,
+  email: string,
 ) {
   const [result] =
     await this.databaseService.execute<
@@ -88,12 +93,14 @@ async update(
         UPDATE alunos
         SET
           nome = ?,
-          curso = ?
+          curso = ?,
+          email = ?
         WHERE id = ?
       `,
       [
         nome,
         curso,
+        email,
         id,
       ],
     );

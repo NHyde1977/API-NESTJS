@@ -37,11 +37,13 @@ export class AlunosController {
     body: {
       nome: string;
       curso: string;
+      email: string;
     },
   ) {
     return this.alunosService.create(
       body.nome,
       body.curso,
+      body.email,
     );
   }
 
@@ -54,12 +56,14 @@ export class AlunosController {
     body: {
       nome: string;
       curso: string;
+      email: string;
     },
   ) {
     return this.alunosService.update(
       id,
       body.nome,
       body.curso,
+      body.email,
     );
   }
 

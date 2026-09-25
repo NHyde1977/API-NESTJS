@@ -20,10 +20,12 @@ export class AlunosService {
   create(
     nome: string,
     curso: string,
+    email: string
   ) {
     return this.alunosRepository.create(
       nome,
       curso,
+      email,
     );
   }
 
@@ -31,11 +33,13 @@ export class AlunosService {
     id: number,
     nome: string,
     curso: string,
+    email: string,
   ) {
     await this.alunosRepository.update(
       id,
       nome,
       curso,
+      email,
     );
 
     return this.alunosRepository.findById(id);
