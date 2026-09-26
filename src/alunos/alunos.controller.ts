@@ -11,6 +11,14 @@ import {
 
 import { AlunosService } from './alunos.service.js';
 
+import {
+  CreateAlunoDto,
+} from './dto/create-aluno.dto.js';
+
+import {
+  UpdateAlunoDto,
+} from './dto/update-aluno.dto.js';
+
 @Controller('alunos')
 export class AlunosController {
   constructor(
@@ -34,17 +42,9 @@ export class AlunosController {
   @Post()
   create(
     @Body()
-    body: {
-      nome: string;
-      curso: string;
-      email: string;
-    },
+    data: CreateAlunoDto,
   ) {
-    return this.alunosService.create(
-      body.nome,
-      body.curso,
-      body.email,
-    );
+    return this.alunosService.create(data);
   }
 
   @Put(':id')
@@ -53,17 +53,11 @@ export class AlunosController {
     id: number,
 
     @Body()
-    body: {
-      nome: string;
-      curso: string;
-      email: string;
-    },
+    data: UpdateAlunoDto,
   ) {
     return this.alunosService.update(
       id,
-      body.nome,
-      body.curso,
-      body.email,
+      data,
     );
   }
 
