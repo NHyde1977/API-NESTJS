@@ -8,8 +8,13 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Patch,
   Put,
 } from '@nestjs/common';
+
+import {
+  PatchAlunoDto,
+} from './dto/patch-aluno.dto.js';
 
 import {
   AlunosService,
@@ -64,6 +69,20 @@ export class AlunosController {
       data,
     );
   }
+
+  @Patch(':id')
+patch(
+  @Param('id', ParseIntPipe)
+  id: number,
+
+  @Body()
+  data: PatchAlunoDto,
+) {
+  return this.alunosService.patch(
+    id,
+    data,
+  );
+}
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)

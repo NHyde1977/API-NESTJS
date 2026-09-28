@@ -15,6 +15,10 @@ import {
   UpdateAlunoDto,
 } from './dto/update-aluno.dto.js';
 
+import {
+  PatchAlunoDto,
+} from './dto/patch-aluno.dto.js';
+
 @Injectable()
 export class AlunosService {
   constructor(
@@ -64,6 +68,22 @@ export class AlunosService {
 
     return this.findById(id);
   }
+
+  async patch(
+  id: number,
+  data: PatchAlunoDto,
+) {
+  const aluno = await this.findById(id);
+
+  await this.alunosRepository.update(
+    id,
+    data.nome ?? aluno.nome,
+    data.curso ?? aluno.curso,
+    data.email ?? aluno.email,
+  );
+
+  return this.findById(id);
+}
 
   async delete(id: number) {
     await this.findById(id);
