@@ -1,8 +1,8 @@
 import {
   IsNotEmpty,
+  IsEmail,
   IsString,
   MaxLength,
-  IsEmail
 } from 'class-validator';
 
 export class UpdateAlunoDto {
@@ -15,7 +15,7 @@ export class UpdateAlunoDto {
   @IsNotEmpty()
   @MaxLength(100)
   curso: string;
-  
+
   @IsEmail()
   @IsNotEmpty()
   email: string;
