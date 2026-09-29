@@ -1,57 +1,45 @@
 import { Injectable } from '@nestjs/common';
-
-import {
-  ResultSetHeader,
-  RowDataPacket,
-} from 'mysql2';
-
-import {
-  DatabaseService,
-} from '../database/database.service.js';
-
-export interface AlunoRow extends RowDataPacket {
-  id: number;
-  nome: string;
-  curso: string;
-  email: string;
-}
+import { PrismaService } from '../prisma/prisma.service.js';
 
 @Injectable()
 export class AlunosRepository {
   constructor(
-    private readonly databaseService:
-      DatabaseService,
+    private readonly prisma: PrismaService,
   ) {}
 
-  async findAll() {
-    const [rows] =
-      await this.databaseService.execute<
-        AlunoRow[]
-      >(
-        `
-          SELECT id, nome, curso, email
-          FROM alunos
-          ORDER BY id
-        `,
-      );
+async findAll(
+  curso?: string,
+  nome?: string,
+  page = 1,
+  limit = 10,
+) {
+  const skip = (page - 1) * limit;
 
-    return rows;
-  }
+  return this.prisma.aluno.findMany({
+    where: {
+      ...(curso && {
+        curso,
+      }),
+      ...(nome && {
+        nome: {
+          contains: nome,
+        },
+      }),
+    },
+    orderBy: {
+      id: 'asc',
+    },
+    skip,
+    take: limit,
+  });
+}
 
   async findById(id: number) {
-    const [rows] =
-      await this.databaseService.execute<
-        AlunoRow[]
-      >(
-        `
-          SELECT id, nome, curso, email
-          FROM alunos
-          WHERE id = ?
-        `,
-        [id],
-      );
-
-    return rows[0] ?? null;
+    return this.prisma.aluno.findUnique({
+      where: {
+        id,
+      },
+    });
   }
 
   async create(
@@ -59,27 +47,13 @@ export class AlunosRepository {
     curso: string,
     email: string,
   ) {
-    const [result] =
-      await this.databaseService.execute<
-        ResultSetHeader
-      >(
-        `
-          INSERT INTO alunos (
-            nome,
-            curso,
-            email
-          )
-          VALUES (?, ?, ?)
-        `,
-        [nome, curso, email],
-      );
-
-    return {
-      id: result.insertId,
-      nome,
-      curso,
-      email,
-    };
+    return this.prisma.aluno.create({
+      data: {
+        nome,
+        curso,
+        email,
+      },
+    });
   }
 
   async update(
@@ -88,41 +62,23 @@ export class AlunosRepository {
     curso: string,
     email: string,
   ) {
-    const [result] =
-      await this.databaseService.execute<
-        ResultSetHeader
-      >(
-        `
-          UPDATE alunos
-          SET
-            nome = ?,
-            curso = ?,
-            email = ?
-          WHERE id = ?
-        `,
-        [
-          nome,
-          curso,
-          email,
-          id,
-        ],
-      );
-
-    return result.affectedRows;
+    return this.prisma.aluno.update({
+      where: {
+        id,
+      },
+      data: {
+        nome,
+        curso,
+        email,
+      },
+    });
   }
 
   async delete(id: number) {
-    const [result] =
-      await this.databaseService.execute<
-        ResultSetHeader
-      >(
-        `
-          DELETE FROM alunos
-          WHERE id = ?
-        `,
-        [id],
-      );
-
-    return result.affectedRows;
+    return this.prisma.aluno.delete({
+      where: {
+        id,
+      },
+    });
   }
 }

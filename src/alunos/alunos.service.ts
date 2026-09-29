@@ -26,15 +26,23 @@ export class AlunosService {
       AlunosRepository,
   ) {}
 
-  findAll() {
-    return this.alunosRepository.findAll();
-  }
+findAll(
+  curso?: string,
+  nome?: string,
+  page = 1,
+  limit = 10,
+) {
+  return this.alunosRepository.findAll(
+    curso,
+    nome,
+    page,
+    limit,
+  );
+}
 
   async findById(id: number) {
     const aluno =
-      await this.alunosRepository.findById(
-        id,
-      );
+      await this.alunosRepository.findById(id);
 
     if (!aluno) {
       throw new NotFoundException(
@@ -59,31 +67,27 @@ export class AlunosService {
   ) {
     await this.findById(id);
 
-    await this.alunosRepository.update(
+    return this.alunosRepository.update(
       id,
       data.nome,
       data.curso,
       data.email,
     );
-
-    return this.findById(id);
   }
 
   async patch(
-  id: number,
-  data: PatchAlunoDto,
-) {
-  const aluno = await this.findById(id);
+    id: number,
+    data: PatchAlunoDto,
+  ) {
+    const aluno = await this.findById(id);
 
-  await this.alunosRepository.update(
-    id,
-    data.nome ?? aluno.nome,
-    data.curso ?? aluno.curso,
-    data.email ?? aluno.email,
-  );
-
-  return this.findById(id);
-}
+    return this.alunosRepository.update(
+      id,
+      data.nome ?? aluno.nome,
+      data.curso ?? aluno.curso,
+      data.email ?? aluno.email ?? '',
+    );
+  }
 
   async delete(id: number) {
     await this.findById(id);

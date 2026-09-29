@@ -5,8 +5,8 @@ import { AppService } from './app.service.js';
 import { AlunosModule } from './alunos/alunos.module.js';
 import { ProfessoresModule } from './professores/professores.module.js';
 import { ConfigModule } from '@nestjs/config';
-import { DatabaseModule } from './database/database.module.js';
 import { DisciplinasModule } from './disciplinas/disciplinas.module.js';
+import { PrismaModule } from './prisma/prisma.module.js';
 
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
@@ -24,8 +24,8 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     }),
     AlunosModule,
     ProfessoresModule,
-    DatabaseModule,
     DisciplinasModule,
+    PrismaModule,
   ],
   controllers: [AppController],
   providers: [AppService],

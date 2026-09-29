@@ -54,13 +54,11 @@ export class DisciplinasService {
   ) {
     await this.findById(id);
 
-    await this.disciplinasRepository.update(
+    return this.disciplinasRepository.update(
       id,
       data.nome,
       data.carga_horaria,
     );
-
-    return this.findById(id);
   }
 
   async delete(id: number) {

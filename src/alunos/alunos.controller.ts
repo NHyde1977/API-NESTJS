@@ -10,6 +10,7 @@ import {
   Post,
   Patch,
   Put,
+  Query,
 } from '@nestjs/common';
 
 import {
@@ -35,10 +36,27 @@ export class AlunosController {
       AlunosService,
   ) {}
 
-  @Get()
-  findAll() {
-    return this.alunosService.findAll();
-  }
+@Get()
+findAll(
+  @Query('curso')
+  curso?: string,
+
+  @Query('nome')
+  nome?: string,
+
+  @Query('page')
+  page?: string,
+
+  @Query('limit')
+  limit?: string,
+) {
+  return this.alunosService.findAll(
+    curso,
+    nome,
+    page ? Number(page) : 1,
+    limit ? Number(limit) : 10,
+  );
+}
 
   @Get(':id')
   findById(
