@@ -34,13 +34,14 @@ async findAll(
   });
 }
 
-  async findById(id: number) {
-    return this.prisma.aluno.findUnique({
-      where: {
-        id,
-      },
-    });
-  }
+async findById(id: number) {
+  return this.prisma.aluno.findUnique({
+    where: { id },
+    include: {
+      cursoRelacao: true,
+    },
+  });
+}
 
   async create(
     nome: string,

@@ -13,6 +13,9 @@ model Aluno {
   curso String  @db.VarChar(100)
   email String? @db.VarChar(150)
 
+  cursoId      Int?
+  cursoRelacao Curso? @relation(fields: [cursoId], references: [id])
+
   @@map("alunos")
 }
 
@@ -22,4 +25,13 @@ model Disciplina {
   cargaHoraria Int    @map("carga_horaria")
 
   @@map("disciplinas")
+}
+
+model Curso {
+  id   Int    @id @default(autoincrement())
+  nome String @db.VarChar(100)
+
+  alunos Aluno[]
+
+  @@map("cursos")
 }
